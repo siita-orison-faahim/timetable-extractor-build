@@ -1,0 +1,13 @@
+
+> autoclass@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 15.5.8
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 1815ms
+ ○ Compiling / ...
+ ✓ Compiled / in 12.9s (1754 modules)
+ GET / 200 in 14146ms

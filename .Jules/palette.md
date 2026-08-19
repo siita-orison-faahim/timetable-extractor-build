@@ -1,0 +1,5 @@
+## 2026-07-16 - Course Card Title Typography Enhancement
+**Learning:** Increasing the course title's visibility (increasing courseCode font size to bold/black `text-xs`) and placing the course name immediately next to it with reduced opacity (e.g., `- [Course Name]` styled as `text-[10px] font-medium text-black/80`) provides an immediate, visual association between the code and its title. This creates an extremely clean hierarchy, satisfying dense layouts while retaining perfect context.
+**Action:** Group related identifiers (like IDs and full names) on the same baseline to preserve vertical layout rhythm.
+
+## 2026-07-17 - Mobile Viewport Landscape Download | Learning: Generating PDFs on mobile/responsive layouts from the active DOM captures the stacked vertical/mobile presentation, breaking the expected desktop landscape timetable PDF download. Rendering a fixed 1200px width container off-screen strictly for pdf capture solves this viewport discrepancy. | Action: Use a dedicated, hidden off-screen landscape template container for generating perfect PDFs across all viewport sizes.
