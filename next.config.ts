@@ -11,10 +11,6 @@ const nextConfig: NextConfig = {
             value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' blob: data:; connect-src 'self' https://generativelanguage.googleapis.com;",
           },
           {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
