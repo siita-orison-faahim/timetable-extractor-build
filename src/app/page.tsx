@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
-import { GraduationCap, ChevronRight, FileText, Calendar, CheckCircle2, Clock, MapPin, BookOpen, Download } from "lucide-react";
+import { GraduationCap, ChevronRight, FileText, Calendar, CheckCircle2, Clock, MapPin, BookOpen, Download, CalendarPlus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { memo } from "react";
 import ConfigLoader from "./components/ConfigLoader";
+import ExportCalendarModal from "./components/ExportCalendarModal";
 import { getCourseColor } from "./utils/colors";
 
 interface ScheduleItem {
@@ -31,10 +32,34 @@ export default function Home() {
   const timetableRef = useRef<HTMLDivElement>(null);
   const downloadTimetableRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const [regFile, setRegFile] = useState<File | null>(null);
   const [tableFile, setTableFile] = useState<File | null>(null);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // Debug helper for testing UI state directly in dev environment
+  if (typeof window !== "undefined") {
+    (window as unknown as { __autoclass_set_sample_data: () => void }).__autoclass_set_sample_data = () => {
+      setSchedule([
+        {
+          courseCode: "CS101",
+          courseName: "Intro to Computer Science",
+          day: "Monday",
+          time: "08:00 - 10:00",
+          venue: "Lab A"
+        },
+        {
+          courseCode: "MATH201",
+          courseName: "Linear Algebra",
+          day: "Wednesday",
+          time: "11:30 - 13:00",
+          venue: "Room 302"
+        }
+      ]);
+      setStep("result");
+    };
+  }
 
   const filteredDays = useMemo(() => {
     const weekdays = DAYS_ORDER.slice(0, 5);
@@ -256,18 +281,25 @@ export default function Home() {
                 <ChevronRight className="w-4 h-4 opacity-30" />
                 <span className="font-medium text-v-text-main">Generated Schedule</span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setIsCalendarModalOpen(true)}
+                  className="v-button-black flex items-center gap-2 px-6 cursor-pointer"
+                >
+                  <CalendarPlus className="w-4 h-4" />
+                  <span>Add to Calendar</span>
+                </button>
                 <button
                   onClick={handleDownloadPDF}
                   disabled={isDownloading}
-                  className="v-button-black flex items-center gap-2 px-6 disabled:opacity-50"
+                  className="v-button-outline flex items-center gap-2 px-6 disabled:opacity-50 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   {isDownloading ? "Generating..." : "Download PDF"}
                 </button>
                 <button
                   onClick={() => setStep("upload")}
-                  className="v-button-outline px-6 self-start md:self-auto"
+                  className="v-button-outline px-6 cursor-pointer"
                 >
                   Start Over
                 </button>
@@ -444,6 +476,12 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ExportCalendarModal
+        isOpen={isCalendarModalOpen}
+        onClose={() => setIsCalendarModalOpen(false)}
+        schedule={schedule}
+      />
     </main>
   );
 }
