@@ -16,6 +16,11 @@ export default function ExportCalendarModal({
   onClose,
   schedule,
 }: ExportCalendarModalProps) {
+  const formatDateString = (date: Date) => {
+    const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  };
+
   // Compute default start date (upcoming Monday or today if today is Monday)
   const getDefaultStartDate = () => {
     const today = new Date();
@@ -23,7 +28,7 @@ export default function ExportCalendarModal({
     const diff = day === 0 ? 1 : (day === 1 ? 0 : 8 - day);
     const nextMonday = new Date(today);
     nextMonday.setDate(today.getDate() + diff);
-    return nextMonday.toISOString().split("T")[0];
+    return formatDateString(nextMonday);
   };
 
   // Compute default end date (12 weeks after default start date)
@@ -32,7 +37,7 @@ export default function ExportCalendarModal({
     const startDate = new Date(year, month - 1, day);
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + 12 * 7); // 12 weeks
-    return endDate.toISOString().split("T")[0];
+    return formatDateString(endDate);
   };
 
   const initialStartDate = getDefaultStartDate();
