@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
-import { GraduationCap, ChevronRight, FileText, Calendar, CheckCircle2, Clock, MapPin, BookOpen, Download, CalendarPlus } from "lucide-react";
+import { GraduationCap, ChevronRight, FileText, Calendar, CheckCircle2, Clock, MapPin, BookOpen, Download, CalendarPlus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { memo } from "react";
 import ConfigLoader from "./components/ConfigLoader";
@@ -243,15 +243,20 @@ export default function Home() {
               />
             </div>
 
-            <div className="flex justify-center pt-8">
-               <button
+            <div className="flex flex-col items-center gap-3 pt-8">
+              <button
                 onClick={handleGenerate}
                 disabled={!regFile || !tableFile}
                 className="v-button-black flex items-center space-x-3 px-10 py-4 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed cursor-pointer group"
-               >
-                 <span className="text-lg">Generate Schedule</span>
-                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-               </button>
+              >
+                <span className="text-lg">Generate Schedule</span>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              {(!regFile || !tableFile) && (
+                <p className="text-xs text-v-text-secondary text-center font-medium">
+                  Please upload both <strong>Registration Document</strong> and <strong>Teaching Timetable</strong> to proceed.
+                </p>
+              )}
             </div>
           </motion.div>
         )}
@@ -565,9 +570,25 @@ const MemoizedUploadBox = memo(function UploadBox({
         accept="application/pdf"
         onClick={(e) => e.stopPropagation()}
       />
-      <div className="pt-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-v-text-main group-hover:gap-4 transition-all">
-        {selectedFile ? "Replace file" : "Select Document"}
-        <ChevronRight className="w-3 h-3" />
+      <div className="pt-4 flex items-center justify-between w-full">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-v-text-main group-hover:gap-4 transition-all">
+          {selectedFile ? "Replace file" : "Select Document"}
+          <ChevronRight className="w-3 h-3" />
+        </div>
+        {selectedFile && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFileSelect(null);
+            }}
+            aria-label={`Remove ${selectedFile.name}`}
+            className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 font-medium px-2 py-1 rounded-md hover:bg-red-50 transition-colors cursor-pointer z-10"
+          >
+            <X className="w-3.5 h-3.5" />
+            <span>Remove</span>
+          </button>
+        )}
       </div>
 
       {/* Subtle background decoration */}
