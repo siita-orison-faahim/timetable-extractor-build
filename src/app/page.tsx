@@ -4,9 +4,13 @@ import { useState, useMemo, useRef } from "react";
 import { GraduationCap, ChevronRight, FileText, Calendar, CheckCircle2, Clock, MapPin, BookOpen, Download, CalendarPlus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { memo } from "react";
+import dynamic from "next/dynamic";
 import ConfigLoader from "./components/ConfigLoader";
-import ExportCalendarModal from "./components/ExportCalendarModal";
 import { getCourseColor } from "./utils/colors";
+
+const ExportCalendarModal = dynamic(() => import("./components/ExportCalendarModal"), {
+  ssr: false,
+});
 
 interface ScheduleItem {
   courseCode: string;
@@ -74,11 +78,18 @@ export default function Home() {
 
   const scheduleByDay = useMemo(() => {
     const map: Record<string, ScheduleItem[]> = {};
+    filteredDays.forEach(day => {
+      map[day] = [];
+    });
+
+    schedule.forEach(item => {
+      if (map[item.day]) {
+        map[item.day].push(item);
+      }
+    });
 
     filteredDays.forEach(day => {
-      map[day] = schedule
-        .filter(item => item.day === day)
-        .sort((a, b) => a.time.localeCompare(b.time));
+      map[day].sort((a, b) => a.time.localeCompare(b.time));
     });
 
     return map;
