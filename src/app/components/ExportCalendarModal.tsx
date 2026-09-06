@@ -40,11 +40,12 @@ export default function ExportCalendarModal({
     return formatDateString(endDate);
   };
 
-  const initialStartDate = getDefaultStartDate();
-  const initialEndDate = getDefaultEndDate(initialStartDate);
-
-  const [startDate, setStartDate] = useState<string>(initialStartDate);
-  const [endDate, setEndDate] = useState<string>(initialEndDate);
+  // Lazy state initializers to prevent constructing Date objects on every re-render
+  const [startDate, setStartDate] = useState<string>(() => getDefaultStartDate());
+  const [endDate, setEndDate] = useState<string>(() => {
+    const start = getDefaultStartDate();
+    return getDefaultEndDate(start);
+  });
   const [enableNotification, setEnableNotification] = useState<boolean>(true);
   const [isExported, setIsExported] = useState<boolean>(false);
 
